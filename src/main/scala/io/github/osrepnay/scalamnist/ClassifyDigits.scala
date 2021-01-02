@@ -9,7 +9,7 @@ object ClassifyDigits {
 
 	def main(args: Array[String]): Unit = {
 		val bufferedSourceTr = Source.fromURL("https://pjreddie.com/media/files/mnist_train.csv")
-		val trainData = bufferedSourceTr.getLines().map{line =>
+		val trainData = bufferedSourceTr.getLines().map {line =>
 			val splitLine = line.split(",")
 			(splitLine.head.toInt, splitLine.tail.map(_.toDouble / 255))
 		}
@@ -34,14 +34,16 @@ object ClassifyDigits {
 		val testImgs = testDataIterators._2.map(_.tail.map(_.toDouble / 255)).toArray
 		println("Testing random test data")
 		val predictions =
-			(0 until 1000).map{_ =>
+			(0 until 1000).map {_ =>
 				val randTestIdx = (math.random() * testLabels.length).toInt
 				val predicted = imgNN.predict(testImgs(randTestIdx))
 				(randTestIdx, predicted)
 			}
 		predictions.foreach(prediction => println(s"Expected ${testLabels(prediction._1)}, got ${prediction._2}"))
-		println(s"Percent correct: ${predictions.count(prediction => testLabels(prediction._1) == prediction._2).
-			toDouble / predictions.length * 100}%")
+		println(s"Percent correct: ${
+			predictions.count(prediction => testLabels(prediction._1) == prediction._2).
+				toDouble / predictions.length * 100
+		}%")
 	}
 
 }
